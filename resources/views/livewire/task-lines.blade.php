@@ -10,8 +10,8 @@
                     <input type="text" class="form-control" wire:model="search" placeholder="Search Task">
                 </div>
             </div>
-            <div class="table-responsive">
-                <table class="table">
+            <div class="table-responsive p-0">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Order</th>
@@ -30,14 +30,18 @@
                             <th>Setting time</th>
                             <th>Unit time</th>
                             <th>Statu</th>
-                            <th>Action</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($Tasklist as $Task)
                         <tr > 
                             <td>
-                                <x-OrderButton id="{{ $Task->OrderLines->orders_id }}" code="{{ $Task->OrderLines->order->code }}"  />
+                                @if($Task->OrderLines ?? null)
+                                    <x-OrderButton id="{{ $Task->OrderLines->orders_id }}" code="{{ $Task->OrderLines->order->code }}"  />
+                                @else
+                                    Generic
+                                @endif
                             </td>
                             <td>{{ $Task->ordre }}</td>
                             <td>#{{ $Task->id }} - {{ $Task->label }}</td>
@@ -47,8 +51,8 @@
                             <td>@if($Task->methods_units_id ) {{ $Task->Unit['label'] }}@endif</td>
                             <td>{{ $Task->unit_cost }} {{ $Factory->curency }}</td>
                             <td>{{ $Task->unit_price }} {{ $Factory->curency }}</td>
-                            <td>{{ $Task->seting_time }}</td>
-                            <td>{{ $Task->unit_time }}</td>
+                            <td>{{ $Task->seting_time }} h</td>
+                            <td>{{ $Task->unit_time }} h</td>
                             <td>{{ $Task->status['title'] }}</td>
                             <td></td>
                         </tr>
@@ -70,7 +74,7 @@
                             <th>Setting time</th>
                             <th>Unit time</th>
                             <th>Statu</th>
-                            <th>Action</th>
+                            <th></th>
                         </tr>
                     </tfoot>
                 </table>

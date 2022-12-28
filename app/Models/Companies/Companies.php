@@ -2,6 +2,7 @@
 
 namespace App\Models\Companies;
 
+use App\Models\File;
 use App\Models\User;
 use App\Models\Workflow\Orders;
 use App\Models\Workflow\Quotes;
@@ -33,7 +34,8 @@ class Companies extends Model
                             'account_general_supplier',
                             'account_auxiliary_supplier',
                             'recept_controle',
-                            'comment'
+                            'comment',
+                            'active',
                         ];
 
     public function Addresses()
@@ -66,6 +68,11 @@ class Companies extends Model
         return $this->hasMany(Quotes::class, 'companies_id');
     }
 
+    public function NonConformity()
+    {
+        return $this->hasMany(QualityNonConformity::class, 'companies_id');
+    }
+
     public function getQuotesCountAttribute()
     {
         return $this->Quotes()->count();
@@ -79,6 +86,11 @@ class Companies extends Model
     public function getOrdersCountAttribute()
     {
         return $this->Quotes()->count();
+    }
+
+    public function files()
+    {
+        return $this->hasMany(File::class);
     }
 
     public function GetPrettyCreatedAttribute()

@@ -37,8 +37,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Service type list</h3>
                 </div>
-                <div class="card-body p-0">
-                  <table  class="table">
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-hover">
                     <thead>
                     <tr>
                       <th>Picture</th>
@@ -77,112 +77,101 @@
                         <td>{{ $MethodsService->margin }}</td>
                         <td><input type="color" class="form-control"  name="color" id="color" value="{{ $MethodsService->color }}"></td>
                         <td class="py-0 align-middle">
-                          <!-- Button trigger modal -->
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalService{{ $MethodsService->id }}">
+                          <!-- Button Modal -->
+                          <button type="button" class="btn bg-teal" data-toggle="modal" data-target="#MethodsService{{ $MethodsService->id }}">
                             <i class="fa fa-lg fa-fw  fa-edit"></i>
                           </button>
                           <!-- Modal {{ $MethodsService->id }} -->
-                          <div class="modal fade" id="ModalService{{ $MethodsService->id }}" tabindex="-1" role="dialog" aria-labelledby="ModalServiceTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLongTitle">Update {{ $MethodsService->label }}</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
+                          <x-adminlte-modal id="MethodsService{{ $MethodsService->id }}" title="Update {{ $MethodsService->label }}" theme="teal" icon="fa fa-pen" size='lg' disable-animations>
+                            <form method="POST" action="{{ route('methods.service.update', ['id' => $MethodsService->id]) }}" enctype="multipart/form-data">
+                              @csrf
+                              <div class="card-body">
+                                <div class="form-group">
+                                  <label for="ordre">Sort order:</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-sort-numeric-down"></i></span>
+                                    </div>
+                                    <input type="number" class="form-control" name="ordre" id="ordre" placeholder="Order" min="0" value="{{ $MethodsService->ordre }}">
+                                  </div>
                                 </div>
-                                <form method="POST" action="{{ route('methods.service.update', ['id' => $MethodsService->id]) }}" enctype="multipart/form-data">
-                                  @csrf
-                                  <div class="modal-body">
-                                    <div class="form-group">
-                                      <label for="ordre">Sort order:</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text"><i class="fas fa-sort-numeric-down"></i></span>
-                                        </div>
-                                        <input type="number" class="form-control" name="ordre" id="ordre" placeholder="Order" value="{{ $MethodsService->ordre }}">
-                                      </div>
+                                <div class="form-group">
+                                  <label for="label">Label</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-tags"></i></span>
                                     </div>
-                                    <div class="form-group">
-                                      <label for="label">Label</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control"  name="label" id="label" placeholder="Label" value="{{ $MethodsService->label }}">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="type">Type</label>
-                                        <div class="input-group">
-                                          <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-exclamation"></i></span>
-                                          </div>
-                                          <select class="form-control" name="type" id="type">
-                                              <option value="1" @if($MethodsService->type == 1 ) Selected @endif>Productive</option>
-                                              <option value="2" @if($MethodsService->type == 2 ) Selected @endif>Raw material</option>
-                                              <option value="3" @if($MethodsService->type == 3 ) Selected @endif>Raw material (Sheet)</option>
-                                              <option value="4" @if($MethodsService->type == 4 ) Selected @endif>Raw material (Profil)</option>
-                                              <option value="5" @if($MethodsService->type == 5 ) Selected @endif>Raw material (block)</option>
-                                              <option value="6" @if($MethodsService->type == 6 ) Selected @endif>Purchase</option>
-                                              <option value="7" @if($MethodsService->type == 7 ) Selected @endif>Sub-contracting</option>
-                                              <option value="8" @if($MethodsService->type == 8 ) Selected @endif>Composed component</option>
-                                          </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="hourly_rate">Hourly rate</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">{{ $Factory->curency }}/H</span>
-                                        </div>
-                                        <input type="number" class="form-control" name="hourly_rate" id="hourly_rate" placeholder="110 €/H" step=".001" value="{{ $MethodsService->hourly_rate }}">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="margin">Margin :</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text"><i class="fas fa-percentage"></i></span>
-                                        </div>
-                                        <input type="number" class="form-control" name="margin" id="margin" placeholder="10%" step=".001" value="{{ $MethodsService->hourly_rate }}">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="color">Color</label>
-                                      <input type="color" class="form-control"  name="color" id="color" value="{{ $MethodsService->color }}">
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="picture">Logo file</label> (peg,png,jpg,gif,svg | max: 10 240 Ko)
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text"><i class="far fa-image"></i></span>
-                                        </div>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" name="picture" id="picture">
-                                            <label class="custom-file-label" for="picture">Choose file</label>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="compannie_id">Supplier</label>
-                                        <select class="form-control" name="compannie_id" id="compannie_id">
-                                          <option value="NULL">None</option>
-                                          @foreach ($CompaniesSelect as $item)
-                                          <option value="{{ $item->id }}"  @if($MethodsService->compannie_id == $item->id  ) Selected @endif>{{ $item->label }}</option>
-                                          @endforeach
-                                        </select>
-                                    </div>
-                                    <!-- /.form-group -->
+                                    <input type="text" class="form-control"  name="label" id="label" placeholder="Label" value="{{ $MethodsService->label }}">
                                   </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                                <div class="form-group">
+                                    <label for="type">Type</label>
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-exclamation"></i></span>
+                                      </div>
+                                      <select class="form-control" name="type" id="type">
+                                          <option value="1" @if($MethodsService->type == 1 ) Selected @endif>Productive</option>
+                                          <option value="2" @if($MethodsService->type == 2 ) Selected @endif>Raw material</option>
+                                          <option value="3" @if($MethodsService->type == 3 ) Selected @endif>Raw material (Sheet)</option>
+                                          <option value="4" @if($MethodsService->type == 4 ) Selected @endif>Raw material (Profil)</option>
+                                          <option value="5" @if($MethodsService->type == 5 ) Selected @endif>Raw material (block)</option>
+                                          <option value="6" @if($MethodsService->type == 6 ) Selected @endif>Purchase</option>
+                                          <option value="7" @if($MethodsService->type == 7 ) Selected @endif>Sub-contracting</option>
+                                          <option value="8" @if($MethodsService->type == 8 ) Selected @endif>Composed component</option>
+                                      </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="hourly_rate">Hourly rate</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">{{ $Factory->curency }}/H</span>
+                                    </div>
+                                    <input type="number" class="form-control" name="hourly_rate" id="hourly_rate" placeholder="110 €/H" step=".001" value="{{ $MethodsService->hourly_rate }}">
                                   </div>
-                                </form>
+                                </div>
+                                <div class="form-group">
+                                  <label for="margin">Margin :</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-percentage"></i></span>
+                                    </div>
+                                    <input type="number" class="form-control" name="margin" id="margin" placeholder="10%" step=".001" value="{{ $MethodsService->hourly_rate }}">
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="color">Color</label>
+                                  <input type="color" class="form-control"  name="color" id="color" value="{{ $MethodsService->color }}">
+                                </div>
+                                <div class="form-group">
+                                  <label for="picture">Logo file</label> (peg,png,jpg,gif,svg | max: 10 240 Ko)
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="far fa-image"></i></span>
+                                    </div>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" name="picture" id="picture">
+                                        <label class="custom-file-label" for="picture">Choose file</label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="compannie_id">Supplier</label>
+                                    <select class="form-control" name="compannie_id" id="compannie_id">
+                                      <option value="NULL">None</option>
+                                      @foreach ($CompaniesSelect as $item)
+                                      <option value="{{ $item->id }}"  @if($MethodsService->compannie_id == $item->id  ) Selected @endif>{{ $item->label }}</option>
+                                      @endforeach
+                                    </select>
+                                </div>
+                                <!-- /.form-group -->
                               </div>
-                            </div>
-                          </div>
+                              <div class="card-footer">
+                                <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+                              </div>
+                            </form>
+                          </x-adminlte-modal>
                         </td>
                       </tr>
                       @empty
@@ -216,102 +205,105 @@
                   <div class="card-header">
                     <h3 class="card-title">New Service</h3>
                   </div>
-                  <form method="POST" action="{{ route('methods.service.create') }}" enctype="multipart/form-data">
-                    @csrf
-                      <div class="form-group">
-                        <label for="code">External ID</label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
-                          </div>
-                          <input type="text" class="form-control"  name="code" id="code" placeholder="External ID">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="ordre">Sort order:</label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-sort-numeric-down"></i></span>
-                          </div>
-                          <input type="number" class="form-control" name="ordre" id="ordre" placeholder="Order">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="label">Label</label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                          </div>
-                          <input type="text" class="form-control"  name="label" id="label" placeholder="Label">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                          <label for="type">Type</label>
+                  <div class="card-body">
+                    <form method="POST" action="{{ route('methods.service.create') }}" enctype="multipart/form-data">
+                      @csrf
+                        <div class="form-group">
+                          <label for="code">External ID</label>
                           <div class="input-group">
                             <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="fas fa-exclamation"></i></span>
+                                <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
                             </div>
-                            <select class="form-control" name="type" id="type">
-                                <option value="1">Productive</option>
-                                <option value="2">Raw material</option>
-                                <option value="3">Raw material (Sheet)</option>
-                                <option value="4">Raw material (Profil)</option>
-                                <option value="5">Raw material (block)</option>
-                                <option value="6">Purchase</option>
-                                <option value="7">Sub-contracting</option>
-                                <option value="8">Composed component</option>
+                            <input type="text" class="form-control"  name="code" id="code" placeholder="External ID">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="ordre">Sort order:</label>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-sort-numeric-down"></i></span>
+                            </div>
+                            <input type="number" class="form-control" name="ordre" id="ordre" min="0" placeholder="Order">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="label">Label</label>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                            </div>
+                            <input type="text" class="form-control"  name="label" id="label" placeholder="Label">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="type">Type</label>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-exclamation"></i></span>
+                              </div>
+                              <select class="form-control" name="type" id="type">
+                                  <option value="1">Productive</option>
+                                  <option value="2">Raw material</option>
+                                  <option value="3">Raw material (Sheet)</option>
+                                  <option value="4">Raw material (Profil)</option>
+                                  <option value="5">Raw material (block)</option>
+                                  <option value="6">Purchase</option>
+                                  <option value="7">Sub-contracting</option>
+                                  <option value="8">Composed component</option>
+                              </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="hourly_rate">Hourly rate</label>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">{{ $Factory->curency }}/H</span>
+                            </div>
+                            <input type="number" class="form-control" name="hourly_rate" id="hourly_rate" placeholder="110 €/H" step=".001">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="margin">Margin :</label>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-percentage"></i></span>
+                            </div>
+                            <input type="number" class="form-control" name="margin" id="margin" placeholder="10%" step=".001">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label for="color">Color</label>
+                          <input type="color" class="form-control"  name="color" id="color" >
+                        </div>
+                        <div class="form-group">
+                          <label for="picture">Logo file</label> (peg,png,jpg,gif,svg | max: 10 240 Ko)
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="far fa-image"></i></span>
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="picture" id="picture">
+                                <label class="custom-file-label" for="picture">Choose file</label>
+                            </div>
+                          
+                        </div>
+                        <div class="form-group">
+                          <label for="compannie_id">Supplier</label>
+                            <select class="form-control" name="compannie_id" id="compannie_id">
+                              <option value="NULL">None</option>
+                              @foreach ($CompaniesSelect as $item)
+                              <option value="{{ $item->id }}">{{ $item->label }}</option>
+                              @endforeach
                             </select>
-                          </div>
-                      </div>
-                      <div class="form-group">
-                        <label for="hourly_rate">Hourly rate</label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                              <span class="input-group-text">{{ $Factory->curency }}/H</span>
-                          </div>
-                          <input type="number" class="form-control" name="hourly_rate" id="hourly_rate" placeholder="110 €/H" step=".001">
                         </div>
+                      <!-- /.form-group -->
                       </div>
-                      <div class="form-group">
-                        <label for="margin">Margin :</label>
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-percentage"></i></span>
-                          </div>
-                          <input type="number" class="form-control" name="margin" id="margin" placeholder="10%" step=".001">
-                        </div>
+                      <div class="card-footer">
+                        <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
                       </div>
-                      <div class="form-group">
-                        <label for="color">Color</label>
-                        <input type="color" class="form-control"  name="color" id="color" >
-                      </div>
-                      <div class="form-group">
-                        <label for="picture">Logo file</label> (peg,png,jpg,gif,svg | max: 10 240 Ko)
-                        <div class="input-group">
-                          <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="far fa-image"></i></span>
-                          </div>
-                          <div class="custom-file">
-                              <input type="file" class="custom-file-input" name="picture" id="picture">
-                              <label class="custom-file-label" for="picture">Choose file</label>
-                          </div>
-                        
-                      </div>
-                      <div class="form-group">
-                        <label for="compannie_id">Supplier</label>
-                          <select class="form-control" name="compannie_id" id="compannie_id">
-                            <option value="NULL">None</option>
-                            @foreach ($CompaniesSelect as $item)
-                            <option value="{{ $item->id }}">{{ $item->label }}</option>
-                            @endforeach
-                          </select>
-                      </div>
-                    <!-- /.form-group -->
-                    </div>
-                    <div class="card-footer">
-                      <button type="submit" class="btn btn-danger">Submit</button>
-                    </div>
-                </form>
+                  </form>
+                <!-- /.card body -->
+                </div>
               <!-- /.card secondary -->
               </div>
             <!-- /.row -->
@@ -331,7 +323,7 @@
                 <div class="card-header">
                     <h3 class="card-title">Ressources type list</h3>
                 </div>
-                <div class="card-body p-0">
+                <div class="card-body ">
                   <table  class="table">
                     <thead>
                     <tr>
@@ -366,30 +358,22 @@
                         <td><input type="color" class="form-control"  name="color" id="color" value="{{ $MethodsRessource->color }}"></td>
                         <td>{{ $MethodsRessource->service['label'] }}</td>
                         <td class=" py-0 align-middle">
-                          <!-- Button trigger modal -->
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalRessource{{ $MethodsRessource->id }}">
+                          <!-- Button Modal -->
+                          <button type="button" class="btn bg-teal" data-toggle="modal" data-target="#MethodsRessource{{ $MethodsRessource->id }}">
                             <i class="fa fa-lg fa-fw  fa-edit"></i>
                           </button>
                           <!-- Modal {{ $MethodsRessource->id }} -->
-                          <div class="modal fade" id="ModalRessource{{ $MethodsRessource->id }}" tabindex="-1" role="dialog" aria-labelledby="ModalRessourceTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLongTitle">Update {{ $MethodsRessource->label }}</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
-                                </div>
-                                <form method="POST" action="{{ route('methods.ressource.update', ['id' => $MethodsRessource->id]) }}" enctype="multipart/form-data">
+                          <x-adminlte-modal id="MethodsRessource{{ $MethodsRessource->id }}" title="Update {{ $MethodsRessource->label }}" theme="teal" icon="fa fa-pen" size='lg' disable-animations>
+                            <form method="POST" action="{{ route('methods.ressource.update', ['id' => $MethodsRessource->id]) }}" enctype="multipart/form-data">
                                   @csrf
-                                  <div class="modal-body">
+                                  <div class="card-body">
                                     <div class="form-group">
                                       <label for="ordre">Sort order:</label>
                                       <div class="input-group">
                                         <div class="input-group-prepend">
                                           <span class="input-group-text"><i class="fas fa-sort-numeric-down"></i></span>
                                         </div>
-                                        <input type="number" class="form-control" name="ordre" id="ordre" placeholder="Order" value="{{ $MethodsRessource->ordre }}">
+                                        <input type="number" class="form-control" name="ordre" id="ordre" placeholder="Order" min="0" value="{{ $MethodsRessource->ordre }}">
                                       </div>
                                     </div>
                                     <div class="form-group">
@@ -470,14 +454,11 @@
                                     </div>
                                     <!-- /.form-group -->
                                   </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                  </div>
-                                </form>
+                              <div class="card-footer">
+                                <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
                               </div>
-                            </div>
-                          </div>
+                            </form>
+                          </x-adminlte-modal>
                         </td>
                       </tr>
                       @empty
@@ -511,108 +492,111 @@
               <div class="card-header">
                 <h3 class="card-title">New Ressource</h3>
               </div>
-              <form method="POST" action="{{ route('methods.ressource.create')}}" enctype="multipart/form-data">
-                @csrf
-                  <div class="form-group">
-                    <label for="code">External ID</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
-                      </div>
-                      <input type="text" class="form-control"  name="code" id="code" placeholder="External ID">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="ordre">Sort order:</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-sort-numeric-down"></i></span>
-                      </div>
-                      <input type="number" class="form-control" name="ordre" id="ordre" placeholder="Order">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="label">Label</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                      </div>
-                      <input type="text" class="form-control"  name="label" id="label" placeholder="Label">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                      <label for="mask_time">Mask time ?</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-user-times"></i></span>
+              <div class="card-body">
+                  <form method="POST" action="{{ route('methods.ressource.create')}}" enctype="multipart/form-data">
+                    @csrf
+                      <div class="form-group">
+                        <label for="code">External ID</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
+                          </div>
+                          <input type="text" class="form-control"  name="code" id="code" placeholder="External ID">
                         </div>
-                        <select class="form-control" name="mask_time" id="mask_time">
-                            <option value="2">No</option>
-                            <option value="1">Yes</option>
-                        </select>
                       </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="capacity">Hour capacity by week</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-stopwatch"></i></span>
+                      <div class="form-group">
+                        <label for="ordre">Sort order:</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-sort-numeric-down"></i></span>
+                          </div>
+                          <input type="number" class="form-control" name="ordre" id="ordre" min="0" placeholder="Order">
+                        </div>
                       </div>
-                      <input type="number" class="form-control" name="capacity" id="capacity" placeholder="110 h/week">
+                      <div class="form-group">
+                        <label for="label">Label</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                          </div>
+                          <input type="text" class="form-control"  name="label" id="label" placeholder="Label">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="mask_time">Mask time ?</label>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user-times"></i></span>
+                            </div>
+                            <select class="form-control" name="mask_time" id="mask_time">
+                                <option value="2">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="capacity">Hour capacity by week</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-stopwatch"></i></span>
+                          </div>
+                          <input type="number" class="form-control" name="capacity" id="capacity" placeholder="110 h/week">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="color">Color</label>
+                        <input type="color" class="form-control"  name="color" id="color" >
+                      </div>
+                      <div class="form-group">
+                        
+                        <label for="picture">Logo file</label> (peg,png,jpg,gif,svg | max: 10 240 Ko)
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="far fa-image"></i></span>
+                          </div>
+                          <div class="custom-file">
+                              <input type="file" class="custom-file-input" name="picture" id="picture">
+                              <label class="custom-file-label" for="picture">Choose file</label>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="section_id">Section</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-industry"></i></span>
+                          </div>
+                          <select class="form-control" name="section_id" id="section_id">
+                            @forelse ($SectionsSelect as $item)
+                            <option value="{{ $item->id }}">{{ $item->label }}</option>
+                            @empty
+                            <option value="">No section, please add before</option>
+                            @endforelse
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label for="service_id">Services</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-list"></i></span>
+                          </div>
+                          <select class="form-control" name="service_id" id="service_id">
+                            @forelse ($ServicesSelect as $item)
+                            <option value="{{ $item->id }}">{{ $item->label }}</option>
+                            @empty
+                            <option value="">No service</option>
+                            @endforelse
+                          </select>
+                        </div>
+                      </div>
+                    <!-- /.form-group -->
                     </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="color">Color</label>
-                    <input type="color" class="form-control"  name="color" id="color" >
-                  </div>
-                  <div class="form-group">
-                    
-                    <label for="picture">Logo file</label> (peg,png,jpg,gif,svg | max: 10 240 Ko)
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="far fa-image"></i></span>
-                      </div>
-                      <div class="custom-file">
-                          <input type="file" class="custom-file-input" name="picture" id="picture">
-                          <label class="custom-file-label" for="picture">Choose file</label>
-                      </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="section_id">Section</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-industry"></i></span>
-                      </div>
-                      <select class="form-control" name="section_id" id="section_id">
-                        @forelse ($SectionsSelect as $item)
-                        <option value="{{ $item->id }}">{{ $item->label }}</option>
-                        @empty
-                        <option value="">No section, please add before</option>
-                        @endforelse
-                      </select>
+                    <div class="card-footer">
+                      <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
                     </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="service_id">Services</label>
-                    <div class="input-group">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-list"></i></span>
-                      </div>
-                      <select class="form-control" name="service_id" id="service_id">
-                        @forelse ($ServicesSelect as $item)
-                        <option value="{{ $item->id }}">{{ $item->label }}</option>
-                        @empty
-                        <option value="">No service</option>
-                        @endforelse
-                      </select>
-                    </div>
-                  </div>
-                <!-- /.form-group -->
+                  </form>
+                  <!-- /.card body -->
                 </div>
-                <div class="card-footer">
-                  <button type="submit" class="btn btn-danger">Submit</button>
-                </div>
-            </form>
               </div>
               <!-- /.card secondary -->
             </div>
@@ -632,8 +616,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Section type list</h3>
                 </div>
-                <div class="card-body p-0">
-                  <table class="table">
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-hover">
                     <thead>
                       <tr>
                         <th>Sort</th>
@@ -653,69 +637,58 @@
                         <td>{{ $MethodsSection->UserManagement['name'] }}</td>
                         <td><input type="color" class="form-control"  name="color" id="color" value="{{ $MethodsSection->color }}"></td>
                         <td class=" py-0 align-middle">
-                          <!-- Button trigger modal -->
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalSection{{ $MethodsSection->id }}">
+                          <!-- Button Modal -->
+                          <button type="button" class="btn bg-teal" data-toggle="modal" data-target="#MethodsSection{{ $MethodsSection->id }}">
                             <i class="fa fa-lg fa-fw  fa-edit"></i>
                           </button>
                           <!-- Modal {{ $MethodsSection->id }} -->
-                          <div class="modal fade" id="ModalSection{{ $MethodsSection->id }}" tabindex="-1" role="dialog" aria-labelledby="ModalSectionTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLongTitle">Update {{ $MethodsSection->label }}</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
+                          <x-adminlte-modal id="MethodsSection{{ $MethodsSection->id }}" title="Update {{ $MethodsSection->label }}" theme="teal" icon="fa fa-pen" size='lg' disable-animations>
+                            <form method="POST" action="{{ route('methods.section.update', ['id' => $MethodsSection->id]) }}" enctype="multipart/form-data">
+                              @csrf
+                              <div class="card-body">
+                                <div class="form-group">
+                                  <label for="ordre">Sort order:</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-sort-numeric-down"></i></span>
+                                    </div>
+                                    <input type="number" class="form-control" name="ordre" id="ordre" placeholder="10" min="0" value="{{ $MethodsSection->ordre }}">
+                                  </div>
                                 </div>
-                                <form method="POST" action="{{ route('methods.section.update', ['id' => $MethodsSection->id]) }}" enctype="multipart/form-data">
-                                  @csrf
-                                  <div class="modal-body">
-                                    <div class="form-group">
-                                      <label for="ordre">Sort order:</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text"><i class="fas fa-sort-numeric-down"></i></span>
-                                        </div>
-                                        <input type="number" class="form-control" name="ordre" id="ordre" placeholder="10" value="{{ $MethodsSection->ordre }}">
-                                      </div>
+                                <div class="form-group">
+                                  <label for="label">Label</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-tags"></i></span>
                                     </div>
-                                    <div class="form-group">
-                                      <label for="label">Label</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control" name="label"  id="label" placeholder="Label" value="{{ $MethodsSection->label }}">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="color">Color</label>
-                                      <input type="color" class="form-control"  name="color" id="color" value="{{ $MethodsSection->color }}">
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                      <label for="user_id">User management</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                        </div>
-                                        <select class="form-control" name="user_id" id="user_id">
-                                          @foreach ($userSelect as $item)
-                                          <option value="{{ $item->id }}" @if($MethodsRessource->user_id == $item->id  ) Selected @endif>{{ $item->name }}</option>
-                                          @endforeach
-                                        </select>
-                                      </div>
-                                    </div>
-                                    <!-- /.form-group -->
+                                    <input type="text" class="form-control" name="label"  id="label" placeholder="Label" value="{{ $MethodsSection->label }}">
                                   </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                                <div class="form-group">
+                                  <label for="color">Color</label>
+                                  <input type="color" class="form-control"  name="color" id="color" value="{{ $MethodsSection->color }}">
+                                </div>
+                                
+                                <div class="form-group">
+                                  <label for="user_id">User management</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    <select class="form-control" name="user_id" id="user_id">
+                                      @foreach ($userSelect as $item)
+                                      <option value="{{ $item->id }}" @if($MethodsSection->user_id == $item->id  ) Selected @endif>{{ $item->name }}</option>
+                                      @endforeach
+                                    </select>
                                   </div>
-                                </form>
+                                </div>
+                                <!-- /.form-group -->
                               </div>
-                            </div>
-                          </div>
+                              <div class="card-footer">
+                                <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+                              </div>
+                            </form>
+                          </x-adminlte-modal>
                         </td>
                       </tr>
                       @empty
@@ -740,59 +713,60 @@
                   <div class="card-header">
                     <h3 class="card-title">New Section</h3>
                   </div>
-                  <form  method="POST" action="{{ route('methods.section.create') }}" class="form-horizontal">
-                    @csrf
-                    <div class="form-group">
-                      <label for="ordre">Sort order:</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-sort-numeric-down"></i></span>
+                  <div class="card-body">
+                    <form  method="POST" action="{{ route('methods.section.create') }}" class="form-horizontal">
+                      @csrf
+                      <div class="form-group">
+                        <label for="ordre">Sort order:</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-sort-numeric-down"></i></span>
+                          </div>
+                          <input type="number" class="form-control" name="ordre" id="ordre" min="0" placeholder="10">
                         </div>
-                        <input type="number" class="form-control" name="ordre" id="ordre" placeholder="10">
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="code">External ID</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
+                      <div class="form-group">
+                        <label for="code">External ID</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
+                          </div>
+                          <input type="text" class="form-control" name="code" id="code" placeholder="External ID">
                         </div>
-                        <input type="text" class="form-control" name="code" id="code" placeholder="External ID">
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="label">Label</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                      <div class="form-group">
+                        <label for="label">Label</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                          </div>
+                          <input type="text" class="form-control" name="label"  id="label" placeholder="Label">
                         </div>
-                        <input type="text" class="form-control" name="label"  id="label" placeholder="Label">
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="color">Color</label>
-                      <input type="color" class="form-control"  name="color" id="color" >
-                    </div>
-                    
-                    <div class="form-group">
-                      <label for="user_id">User management</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      <div class="form-group">
+                        <label for="color">Color</label>
+                        <input type="color" class="form-control"  name="color" id="color" >
+                      </div>
+                      
+                      <div class="form-group">
+                        <label for="user_id">User management</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                          </div>
+                          <select class="form-control" name="user_id" id="user_id">
+                            @foreach ($userSelect as $item)
+                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
+                          </select>
                         </div>
-                        <select class="form-control" name="user_id" id="user_id">
-                          @foreach ($userSelect as $item)
-                          <option value="{{ $item->id }}">{{ $item->name }}</option>
-                          @endforeach
-                        </select>
                       </div>
-                    </div>
-                    <div class="card-footer">
-                      <div class="offset-sm-2 col-sm-10">
-                        <button type="submit" class="btn btn-danger">Submit New</button>
+                      <div class="card-footer">
+                        <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
                       </div>
-                    </div>
-                  </form>
+                    </form>
+                  <!-- /.card body -->
+                  </div>
                 <!-- /.card secondary -->
                 </div>
               <!-- /.row -->
@@ -811,8 +785,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Location in workshop list</h3>
                 </div>
-                <div class="card-body p-0">
-                  <table class="table">
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-hover">
                     <thead>
                       <tr>
                         <th>External ID</th>
@@ -830,54 +804,43 @@
                         <td>{{ $MethodsLocation->ressources['label'] }}</td>
                         <td><input type="color" class="form-control"  name="color" id="color" value="{{ $MethodsLocation->color }}"></td>
                         <td class=" py-0 align-middle">
-                          <!-- Button trigger modal -->
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalLocation{{ $MethodsLocation->id }}">
+                          <!-- Button Modal -->
+                          <button type="button" class="btn bg-teal" data-toggle="modal" data-target="#MethodsLocation{{ $MethodsLocation->id }}">
                             <i class="fa fa-lg fa-fw  fa-edit"></i>
                           </button>
                           <!-- Modal {{ $MethodsLocation->id }} -->
-                          <div class="modal fade" id="ModalLocation{{ $MethodsLocation->id }}" tabindex="-1" role="dialog" aria-labelledby="ModalLocationTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLongTitle">Update {{ $MethodsLocation->label }}</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
+                          <x-adminlte-modal id="MethodsLocation{{ $MethodsLocation->id }}" title="Update {{ $MethodsLocation->label }}" theme="teal" icon="fa fa-pen" size='lg' disable-animations>
+                            <form method="POST" action="{{ route('methods.location.update', ['id' => $MethodsLocation->id]) }}" enctype="multipart/form-data">
+                              @csrf
+                              <div class="card-body">
+                                <div class="form-group">
+                                  <label for="label">Label</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" name="label"  id="label" placeholder="Label" value="{{ $MethodsLocation->label }}">
+                                  </div>
                                 </div>
-                                <form method="POST" action="{{ route('methods.location.update', ['id' => $MethodsLocation->id]) }}" enctype="multipart/form-data">
-                                  @csrf
-                                  <div class="modal-body">
-                                    <div class="form-group">
-                                      <label for="label">Label</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control" name="label"  id="label" placeholder="Label" value="{{ $MethodsLocation->label }}">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="color">Color</label>
-                                      <input type="color" class="form-control"  name="color" id="color" value="{{ $MethodsLocation->color }}">
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="ressource_id">Ressource</label>
-                                      <select class="form-control" name="ressource_id" id="ressource_id">
-                                        @foreach ($RessourcesSelect as $item)
-                                        <option value="{{ $item->id }}" @if($MethodsLocation->ressource_id == $item->id  ) Selected @endif>{{ $item->label }}</option>
-                                        @endforeach
-                                      </select>
-                                    </div>
-                                    <!-- /.form-group -->
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                  </div>
-                                </form>
+                                <div class="form-group">
+                                  <label for="color">Color</label>
+                                  <input type="color" class="form-control"  name="color" id="color" value="{{ $MethodsLocation->color }}">
+                                </div>
+                                <div class="form-group">
+                                  <label for="ressource_id">Ressource</label>
+                                  <select class="form-control" name="ressource_id" id="ressource_id">
+                                    @foreach ($RessourcesSelect as $item)
+                                    <option value="{{ $item->id }}" @if($MethodsLocation->ressource_id == $item->id  ) Selected @endif>{{ $item->label }}</option>
+                                    @endforeach
+                                  </select>
+                                </div>
+                                <!-- /.form-group -->
                               </div>
-                            </div>
-                          </div>
+                              <div class="card-footer">
+                                <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+                              </div>
+                            </form>
+                          </x-adminlte-modal>
                         </td>
                       </tr>
                       @empty
@@ -907,44 +870,45 @@
                   <div class="card-header">
                     <h3 class="card-title">New location</h3>
                   </div>
-                  <form  method="POST" action="{{ route('methods.location.create') }}" class="form-horizontal">
-                    @csrf
-                    <div class="form-group">
-                      <label for="code">External ID</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
+                  <div class="card-body">
+                    <form  method="POST" action="{{ route('methods.location.create') }}" class="form-horizontal">
+                      @csrf
+                      <div class="form-group">
+                        <label for="code">External ID</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
+                          </div>
+                          <input type="text" class="form-control" name="code" id="code" placeholder="External ID">
                         </div>
-                        <input type="text" class="form-control" name="code" id="code" placeholder="External ID">
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="label">Label</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                      <div class="form-group">
+                        <label for="label">Label</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                          </div>
+                          <input type="text" class="form-control" name="label"  id="label" placeholder="Label">
                         </div>
-                        <input type="text" class="form-control" name="label"  id="label" placeholder="Label">
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="color">Color</label>
-                      <input type="color" class="form-control"  name="color" id="color" >
-                    </div>
-                    <div class="form-group">
-                      <label for="ressource_id">Ressource</label>
-                      <select class="form-control" name="ressource_id" id="ressource_id">
-                        @foreach ($RessourcesSelect as $item)
-                        <option value="{{ $item->id }}">{{ $item->label }}</option>
-                        @endforeach
-                      </select>
-                    </div>
-                    <div class="card-footer">
-                      <div class="offset-sm-2 col-sm-10">
-                        <button type="submit" class="btn btn-danger">Submit New</button>
+                      <div class="form-group">
+                        <label for="color">Color</label>
+                        <input type="color" class="form-control"  name="color" id="color" >
                       </div>
-                    </div>
-                  </form>
+                      <div class="form-group">
+                        <label for="ressource_id">Ressource</label>
+                        <select class="form-control" name="ressource_id" id="ressource_id">
+                          @foreach ($RessourcesSelect as $item)
+                          <option value="{{ $item->id }}">{{ $item->label }}</option>
+                          @endforeach
+                        </select>
+                      </div>
+                      <div class="card-footer">
+                        <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+                      </div>
+                    </form>
+                  <!-- /.card body -->
+                  </div>
                 <!-- /.card secondary -->
                 </div>
               <!-- /.row -->
@@ -964,13 +928,14 @@
                 <div class="card-header">
                     <h3 class="card-title">Units type list</h3>
                 </div>
-                <div class="card-body p-0">
-                  <table class="table">
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-hover">
                     <thead>
                       <tr>
                         <th>External ID</th>
                         <th>Description</th>
                         <th>Type</th>
+                        <th></th>
                         <th></th>
                       </tr>
                     </thead>
@@ -986,57 +951,59 @@
                           @if($MethodsUnit->type  == 4) Volume @endif
                           @if($MethodsUnit->type  == 5) Other @endif
                         </td>
+                        <td>
+                          <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="customRadio{{ $MethodsUnit->id }}" name="customRadio"  @if( $MethodsUnit->default == 1 ) checked @endif disabled>
+                            <label for="customRadio{{ $MethodsUnit->id }}" class="custom-control-label">by default</label>
+                          </div>
+                        </td>
                         <td class=" py-0 align-middle">
-                          <!-- Button trigger modal -->
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalUnit{{ $MethodsUnit->id }}">
+                          <!-- Button Modal -->
+                          <button type="button" class="btn bg-teal" data-toggle="modal" data-target="#MethodsUnit{{ $MethodsUnit->id }}">
                             <i class="fa fa-lg fa-fw  fa-edit"></i>
                           </button>
                           <!-- Modal {{ $MethodsUnit->id }} -->
-                          <div class="modal fade" id="ModalUnit{{ $MethodsUnit->id }}" tabindex="-1" role="dialog" aria-labelledby="ModalUnitTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLongTitle">Update {{ $MethodsUnit->label }}</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
+                          <x-adminlte-modal id="MethodsUnit{{ $MethodsUnit->id }}" title="Update {{ $MethodsUnit->label }}" theme="teal" icon="fa fa-pen" size='lg' disable-animations>
+                            <form method="POST" action="{{ route('methods.unit.update', ['id' => $MethodsUnit->id]) }}" enctype="multipart/form-data">
+                              @csrf
+                              <div class="card-body">
+                                <div class="form-group">
+                                  <label for="label">Label</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" name="label"  id="label" placeholder="Label" value="{{ $MethodsUnit->label }}">
+                                  </div>
                                 </div>
-                                <form method="POST" action="{{ route('methods.unit.update', ['id' => $MethodsUnit->id]) }}" enctype="multipart/form-data">
-                                  @csrf
-                                  <div class="modal-body">
-                                    <div class="form-group">
-                                      <label for="label">Label</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control" name="label"  id="label" placeholder="Label" value="{{ $MethodsUnit->label }}">
-                                      </div>
+                                <div class="form-group">
+                                  <label for="type">Type</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-ruler"></i></span>
                                     </div>
-                                    <div class="form-group">
-                                      <label for="type">Type</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-ruler"></i></span>
-                                        </div>
-                                        <select class="form-control" name="type" id="type">
-                                            <option value="1" @if($MethodsUnit->type == 1  ) Selected @endif>Mass</option>
-                                            <option value="2" @if($MethodsUnit->type == 2  ) Selected @endif>Length</option>
-                                            <option value="3" @if($MethodsUnit->type == 3  ) Selected @endif>Aera</option>
-                                            <option value="4" @if($MethodsUnit->type == 4  ) Selected @endif>Volume</option>
-                                            <option value="5" @if($MethodsUnit->type == 5  ) Selected @endif>Other</option>
-                                        </select>
-                                      </div>
-                                    </div>
+                                    <select class="form-control" name="type" id="type">
+                                        <option value="1" @if($MethodsUnit->type == 1  ) Selected @endif>Mass</option>
+                                        <option value="2" @if($MethodsUnit->type == 2  ) Selected @endif>Length</option>
+                                        <option value="3" @if($MethodsUnit->type == 3  ) Selected @endif>Aera</option>
+                                        <option value="4" @if($MethodsUnit->type == 4  ) Selected @endif>Volume</option>
+                                        <option value="5" @if($MethodsUnit->type == 5  ) Selected @endif>Other</option>
+                                    </select>
                                   </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                  </div>
-                                </form>
+                                </div>
+                                <div class="form-group">
+                                  <label for="month_end">By default</label>
+                                  <select class="form-control" name="default" id="default">
+                                      <option value="0" @if($MethodsUnit->default == 0) selected @endif>No</option>
+                                      <option value="1" @if($MethodsUnit->default == 1) selected @endif>Yes</option>
+                                  </select>
+                                </div>
                               </div>
-                            </div>
-                          </div>
+                              <div class="card-footer">
+                                <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+                              </div>
+                            </form>
+                          </x-adminlte-modal>
                         </td>
                       </tr>
                       @empty
@@ -1049,6 +1016,7 @@
                         <th>Description</th>
                         <th>Type</th>
                         <th></th>
+                        <th></th>
                       </tr>
                     </tfoot>
                   </table>
@@ -1059,47 +1027,48 @@
                   <div class="card-header">
                     <h3 class="card-title">New Units</h3>
                   </div>
-                  <form  method="POST" action="{{ route('methods.unit.create') }}" class="form-horizontal">
-                    @csrf
-                    <div class="form-group">
-                      <label for="code">External ID</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
-                        </div>
-                        <input type="text" class="form-control" name="code" id="code" placeholder="External ID">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="label">Label</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                        </div>
-                        <input type="text" class="form-control" name="label"  id="label" placeholder="Label">
-                      </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Type</label>
+                  <div class="card-body">
+                    <form  method="POST" action="{{ route('methods.unit.create') }}" class="form-horizontal">
+                      @csrf
+                      <div class="form-group">
+                        <label for="code">External ID</label>
                         <div class="input-group">
                           <div class="input-group-prepend">
-                              <span class="input-group-text"><i class="fas fa-ruler"></i></span>
+                              <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
                           </div>
-                          <select class="form-control" name="type" id="type">
-                              <option value="1">Mass</option>
-                              <option value="2">Length</option>
-                              <option value="3">Aera</option>
-                              <option value="4">Volume</option>
-                              <option value="5">Other</option>
-                          </select>
+                          <input type="text" class="form-control" name="code" id="code" placeholder="External ID">
                         </div>
-                    </div>
-                    <div class="card-footer">
-                      <div class="offset-sm-2 col-sm-10">
-                        <button type="submit" class="btn btn-danger">Submit New</button>
                       </div>
-                    </div>
-                  </form>
+                      <div class="form-group">
+                        <label for="label">Label</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                          </div>
+                          <input type="text" class="form-control" name="label"  id="label" placeholder="Label">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                          <label for="type">Type</label>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-ruler"></i></span>
+                            </div>
+                            <select class="form-control" name="type" id="type">
+                                <option value="1">Mass</option>
+                                <option value="2">Length</option>
+                                <option value="3">Aera</option>
+                                <option value="4">Volume</option>
+                                <option value="5">Other</option>
+                            </select>
+                          </div>
+                      </div>
+                      <div class="card-footer">
+                        <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+                      </div>
+                    </form>
+                  <!-- /.card body -->
+                  </div>
                 <!-- /.card secondary -->
                 </div>
               <!-- /.row -->
@@ -1120,8 +1089,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Famillies type list</h3>
                 </div>
-                <div class="card-body p-0">
-                  <table class="table">
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-hover">
                     <thead>
                       <tr>
                         <th>External ID</th>
@@ -1137,56 +1106,45 @@
                         <td>{{ $MethodsFamilie->label }}</td>
                         <td>{{ $MethodsFamilie->service['label'] }}</td>
                         <td class=" py-0 align-middle">
-                          <!-- Button trigger modal -->
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalFamilie{{ $MethodsFamilie->id }}">
+                          <!-- Button Modal -->
+                          <button type="button" class="btn bg-teal" data-toggle="modal" data-target="#MethodsFamilie{{ $MethodsFamilie->id }}">
                             <i class="fa fa-lg fa-fw  fa-edit"></i>
                           </button>
                           <!-- Modal {{ $MethodsFamilie->id }} -->
-                          <div class="modal fade" id="ModalFamilie{{ $MethodsFamilie->id }}" tabindex="-1" role="dialog" aria-labelledby="ModalFamilieTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLongTitle">Update {{ $MethodsFamilie->label }}</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
+                          <x-adminlte-modal id="MethodsFamilie{{ $MethodsFamilie->id }}" title="Update {{ $MethodsFamilie->label }}" theme="teal" icon="fa fa-pen" size='lg' disable-animations>
+                            <form method="POST" action="{{ route('methods.family.update', ['id' => $MethodsFamilie->id]) }}" enctype="multipart/form-data">
+                              @csrf
+                              <div class="card-body">
+                                <div class="form-group">
+                                  <label for="label">Label</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" name="label"  id="label" placeholder="Label" value="{{ $MethodsFamilie->label }}">
+                                  </div>
                                 </div>
-                                <form method="POST" action="{{ route('methods.family.update', ['id' => $MethodsFamilie->id]) }}" enctype="multipart/form-data">
-                                  @csrf
-                                  <div class="modal-body">
-                                    <div class="form-group">
-                                      <label for="label">Label</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control" name="label"  id="label" placeholder="Label" value="{{ $MethodsFamilie->label }}">
-                                      </div>
+                                <div class="form-group">
+                                  <label for="service_id">Services</label>
+                                  <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-list"></i></span>
                                     </div>
-                                    <div class="form-group">
-                                      <label for="service_id">Services</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text"><i class="fas fa-list"></i></span>
-                                        </div>
-                                        <select class="form-control" name="service_id" id="service_id">
-                                          @forelse ($ServicesSelect as $item)
-                                          <option value="{{ $item->id }}" @if($MethodsFamilie->service_id == $item->id  ) Selected @endif>{{ $item->label }}</option>
-                                          @empty
-                                          <option value="">No service, please add one before</option>
-                                          @endforelse
-                                        </select>
-                                      </div>
-                                    </div>
+                                    <select class="form-control" name="service_id" id="service_id">
+                                      @forelse ($ServicesSelect as $item)
+                                      <option value="{{ $item->id }}" @if($MethodsFamilie->service_id == $item->id  ) Selected @endif>{{ $item->label }}</option>
+                                      @empty
+                                      <option value="">No service, please add one before</option>
+                                      @endforelse
+                                    </select>
                                   </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                  </div>
-                                </form>
+                                </div>
                               </div>
-                            </div>
-                          </div>
+                              <div class="card-footer">
+                                <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+                              </div>
+                            </form>
+                          </x-adminlte-modal>
                         </td>
                       </tr>
                       @empty
@@ -1209,47 +1167,48 @@
                   <div class="card-header">
                     <h3 class="card-title">New family</h3>
                   </div>
-                  <form  method="POST" action="{{ route('methods.family.create') }}" class="form-horizontal">
-                    @csrf
-                    <div class="form-group">
-                      <label for="code">External ID</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
+                  <div class="card-body">
+                    <form  method="POST" action="{{ route('methods.family.create') }}" class="form-horizontal">
+                      @csrf
+                      <div class="form-group">
+                        <label for="code">External ID</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
+                          </div>
+                          <input type="text" class="form-control" name="code" id="code" placeholder="External ID">
                         </div>
-                        <input type="text" class="form-control" name="code" id="code" placeholder="External ID">
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="label">Label</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                      <div class="form-group">
+                        <label for="label">Label</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                          </div>
+                          <input type="text" class="form-control" name="label"  id="label" placeholder="Label">
                         </div>
-                        <input type="text" class="form-control" name="label"  id="label" placeholder="Label">
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="service_id">Services</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-list"></i></span>
+                      <div class="form-group">
+                        <label for="service_id">Services</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-list"></i></span>
+                          </div>
+                          <select class="form-control" name="service_id" id="service_id">
+                            @forelse ($ServicesSelect as $item)
+                            <option value="{{ $item->id }}">{{ $item->label }}</option>
+                            @empty
+                            <option value="">No service, please add one before</option>
+                            @endforelse
+                          </select>
                         </div>
-                        <select class="form-control" name="service_id" id="service_id">
-                          @forelse ($ServicesSelect as $item)
-                          <option value="{{ $item->id }}">{{ $item->label }}</option>
-                          @empty
-                          <option value="">No service, please add one before</option>
-                          @endforelse
-                        </select>
                       </div>
-                    </div>
-                    <div class="card-footer">
-                      <div class="offset-sm-2 col-sm-10">
-                        <button type="submit" class="btn btn-danger">Submit New</button>
+                      <div class="card-footer">
+                        <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
                       </div>
-                    </div>
-                  </form>
+                    </form>
+                  <!-- /.card body -->
+                  </div>
                 <!-- /.card secondary -->
                 </div>
               <!-- /.row -->
@@ -1268,8 +1227,8 @@
                 <div class="card-header">
                     <h3 class="card-title">Tools list</h3>
                 </div>
-                <div class="card-body p-0">
-                  <table class="table">
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-hover">
                     <thead>
                       <tr>
                         <th>Picture</th>
@@ -1300,85 +1259,75 @@
                         <td>{{ $MethodsTool->end_date }}</td>
                         <td>{{ $MethodsTool->qty }}</td>
                         <td class="py-0 align-middle">
-                          <!-- Button trigger modal -->
-                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ModalTool{{ $MethodsTool->id }}">
+                          <!-- Button Modal -->
+                          <button type="button" class="btn bg-teal" data-toggle="modal" data-target="#MethodsTool{{ $MethodsTool->id }}">
                             <i class="fa fa-lg fa-fw  fa-edit"></i>
                           </button>
                           <!-- Modal {{ $MethodsTool->id }} -->
-                          <div class="modal fade" id="ModalTool{{ $MethodsTool->id }}" tabindex="-1" role="dialog" aria-labelledby="ModalToolTitle" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLongTitle">Update {{ $MethodsTool->label }}</h5>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                  </button>
+                          <x-adminlte-modal id="MethodsTool{{ $MethodsTool->id }}" title="Update {{ $MethodsTool->label }}" theme="teal" icon="fa fa-pen" size='lg' disable-animations>
+                            <form method="POST" action="{{ route('methods.tool.update', ['id' => $MethodsTool->id]) }}" enctype="multipart/form-data">
+                                @csrf
+                                <div class="card-body">
+                                  <div class="form-group">
+                                    <label for="label">Label</label>
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                          <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                                      </div>
+                                      <input type="text" class="form-control" name="label"  id="label" placeholder="Label" value="{{ $MethodsTool->label }}">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="ETAT">Statu</label>
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-exclamation"></i></span>
+                                      </div>
+                                      <select class="form-control" name="ETAT" id="ETAT">
+                                        <option value="1" @if($MethodsTool->ETAT == 1 ) Selected @endif>Unused</option>
+                                        <option value="2" @if($MethodsTool->ETAT == 2  ) Selected @endif>Used</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="cost">Cost</label>
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                          <span class="input-group-text">{{ $Factory->curency }}</span>
+                                      </div>
+                                      <input type="number" class="form-control" name="cost"  id="cost" placeholder="Cost" step=".001" value="{{ $MethodsTool->cost }}">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="qty">Quantity</label>
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                          <span class="input-group-text"><i class="fas fa-times"></i></span>
+                                      </div>
+                                      <input type="numer" class="form-control" name="qty"  id="qty" placeholder="Qty" value="{{ $MethodsTool->qty }}">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="end_date">End date</label>
+                                    <input type="date" class="form-control" name="end_date"  id="end_date" placeholder="Qty" value="{{ $MethodsTool->end_date }}" >
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="picture">Logo file</label> (peg,png,jpg,gif,svg | max: 10 240 Ko)
+                                    <div class="input-group">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="far fa-image"></i></span>
+                                      </div>
+                                      <div class="custom-file">
+                                          <input type="file" class="custom-file-input" name="picture" id="picture">
+                                          <label class="custom-file-label" for="picture">Choose file</label>
+                                      </div>
+                                  </div>
                                 </div>
-                                <form method="POST" action="{{ route('methods.tool.update', ['id' => $MethodsTool->id]) }}" enctype="multipart/form-data">
-                                  @csrf
-                                  <div class="modal-body">
-                                    <div class="form-group">
-                                      <label for="label">Label</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control" name="label"  id="label" placeholder="Label" value="{{ $MethodsTool->label }}">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="ETAT">Statu</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text"><i class="fas fa-exclamation"></i></span>
-                                        </div>
-                                        <select class="form-control" name="ETAT" id="ETAT">
-                                          <option value="1" @if($MethodsTool->ETAT == 1 ) Selected @endif>Unused</option>
-                                          <option value="2" @if($MethodsTool->ETAT == 2  ) Selected @endif>Used</option>
-                                        </select>
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="cost">Cost</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">{{ $Factory->curency }}</span>
-                                        </div>
-                                        <input type="number" class="form-control" name="cost"  id="cost" placeholder="Cost" step=".001" value="{{ $MethodsTool->cost }}">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="qty">Quantity</label>
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="fas fa-times"></i></span>
-                                        </div>
-                                        <input type="numer" class="form-control" name="qty"  id="qty" placeholder="Qty" value="{{ $MethodsTool->qty }}">
-                                      </div>
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="end_date">End date</label>
-                                      <input type="date" class="form-control" name="end_date"  id="end_date" placeholder="Qty" value="{{ $MethodsTool->end_date }}" >
-                                    </div>
-                                    <div class="form-group">
-                                      <label for="picture">Logo file</label> (peg,png,jpg,gif,svg | max: 10 240 Ko)
-                                      <div class="input-group">
-                                        <div class="input-group-prepend">
-                                          <span class="input-group-text"><i class="far fa-image"></i></span>
-                                        </div>
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" name="picture" id="picture">
-                                            <label class="custom-file-label" for="picture">Choose file</label>
-                                        </div>
-                                    </div>
-                                  </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
+                                <div class="card-footer">
+                                  <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+                                </div>
+                              </form>
+                            </x-adminlte-modal>
                           </div>
                         </td>
                       </tr>
@@ -1406,77 +1355,78 @@
                   <div class="card-header">
                     <h3 class="card-title">New tool</h3>
                   </div>
-                  <form  method="POST" action="{{ route('methods.tool.create') }}" class="form-horizontal" enctype="multipart/form-data">
-                    @csrf
-                    <div class="form-group">
-                      <label for="code">External ID</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
+                  <div class="card-body">
+                    <form  method="POST" action="{{ route('methods.tool.create') }}" class="form-horizontal" enctype="multipart/form-data">
+                      @csrf
+                      <div class="form-group">
+                        <label for="code">External ID</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-external-link-square-alt"></i></span>
+                          </div>
+                          <input type="text" class="form-control" name="code" id="code" placeholder="External ID">
                         </div>
-                        <input type="text" class="form-control" name="code" id="code" placeholder="External ID">
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="label">Label</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                      <div class="form-group">
+                        <label for="label">Label</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-tags"></i></span>
+                          </div>
+                          <input type="text" class="form-control" name="label"  id="label" placeholder="Label">
                         </div>
-                        <input type="text" class="form-control" name="label"  id="label" placeholder="Label">
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="ETAT">Statu</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-exclamation"></i></span>
+                      <div class="form-group">
+                        <label for="ETAT">Statu</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-exclamation"></i></span>
+                          </div>
+                          <select class="form-control" name="ETAT" id="ETAT">
+                            <option value="1">Unused</option>
+                            <option value="2">Used</option>
+                          </select>
                         </div>
-                        <select class="form-control" name="ETAT" id="ETAT">
-                          <option value="1">Unused</option>
-                          <option value="2">Used</option>
-                        </select>
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="cost">Cost</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">{{ $Factory->curency }}</span>
+                      <div class="form-group">
+                        <label for="cost">Cost</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text">{{ $Factory->curency }}</span>
+                          </div>
+                          <input type="number" class="form-control" name="cost"  id="cost" placeholder="Cost" step=".001">
                         </div>
-                        <input type="number" class="form-control" name="cost"  id="cost" placeholder="Cost" step=".001">
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="qty">Quantity</label>
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fas fa-times"></i></span>
+                      <div class="form-group">
+                        <label for="qty">Quantity</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="fas fa-times"></i></span>
+                          </div>
+                          <input type="numer" class="form-control" name="qty"  id="qty" placeholder="Qty" >
                         </div>
-                        <input type="numer" class="form-control" name="qty"  id="qty" placeholder="Qty" >
                       </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="end_date">End date</label>
-                      <input type="date" class="form-control" name="end_date"  id="end_date" placeholder="Qty" >
-                    </div>
-                    <div class="form-group">
-                      <label for="picture">Logo file</label> (peg,png,jpg,gif,svg | max: 10 240 Ko)
-                      <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="far fa-image"></i></span>
-                        </div>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="picture" id="picture">
-                            <label class="custom-file-label" for="picture">Choose file</label>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                      <div class="offset-sm-2 col-sm-10">
-                        <button type="submit" class="btn btn-danger">Submit New</button>
+                      <div class="form-group">
+                        <label for="end_date">End date</label>
+                        <input type="date" class="form-control" name="end_date"  id="end_date" placeholder="Qty" >
                       </div>
-                    </div>
-                  </form>
+                      <div class="form-group">
+                        <label for="picture">Logo file</label> (peg,png,jpg,gif,svg | max: 10 240 Ko)
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="far fa-image"></i></span>
+                          </div>
+                          <div class="custom-file">
+                              <input type="file" class="custom-file-input" name="picture" id="picture">
+                              <label class="custom-file-label" for="picture">Choose file</label>
+                          </div>
+                      </div>
+                      <div class="card-footer">
+                        <x-adminlte-button class="btn-flat" type="submit" label="Submit" theme="success" icon="fas fa-lg fa-save"/>
+                      </div>
+                    </form>
+                  <!-- /.card body -->
+                  </div>
                 <!-- /.card secondary -->
                 </div>
               <!-- /.row -->

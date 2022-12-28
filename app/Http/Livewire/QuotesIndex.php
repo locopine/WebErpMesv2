@@ -10,8 +10,10 @@ use App\Models\Workflow\Quotes;
 use Illuminate\Support\Facades\DB;
 use App\Models\Companies\Companies;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\QuoteNotification;
 use App\Models\Companies\CompaniesContacts;
 use App\Models\Companies\CompaniesAddresses;
+use Illuminate\Support\Facades\Notification;
 use App\Models\Accounting\AccountingDelivery;
 use App\Models\Accounting\AccountingPaymentMethod;
 use App\Models\Accounting\AccountingPaymentConditions;
@@ -104,7 +106,7 @@ class QuotesIndex extends Component
         }
 
         
-        $CompanieSelect = Companies::select('id', 'code','label')->get();
+        $CompanieSelect = Companies::select('id', 'code','label')->where('active', 1)->get();
         $AddressSelect = CompaniesAddresses::select('id', 'label','adress')->where('companies_id', $this->companies_id)->get();
         $ContactSelect = CompaniesContacts::select('id', 'first_name','name')->where('companies_id', $this->companies_id)->get();
         $AccountingConditionSelect = AccountingPaymentConditions::select('id', 'code','label')->get();
@@ -142,8 +144,13 @@ class QuotesIndex extends Component
                                             'accounting_deliveries_id'=>$this->accounting_deliveries_id,   
                                             'comment'=>$this->comment, 
             ]);
-            Companies::where('id', $this->companies_id)->update(['statu_customer'=>1]);
-            // Reset Form Fields After Creating line
+
+            // notification for all user in database
+            $users = User::where('quotes_notification', 1)->get();
+            Notification::send($users, new QuoteNotification($QuotesCreated));
+
+            //change statu companie
+            Companies::where('id', $this->companies_id)->update(['statu_customer'=>2]);
             return redirect()->route('quotes.show', ['id' => $QuotesCreated->id])->with('success', 'Successfully created new quote');
     }
 }

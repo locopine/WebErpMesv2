@@ -2,37 +2,40 @@
 
 namespace App\Http\Livewire;
 
+use stdClass;
 use Livewire\Component;
 use App\Models\Admin\Factory;
+use App\Models\Planning\Task;
 use App\Models\Planning\Status;
+use PhpParser\Node\Expr\Empty_;
 use App\Models\Products\Products;
+use App\Models\Workflow\OrderLines;
 use App\Models\Workflow\QuoteLines;
 use App\Models\Methods\MethodsUnits;
 use App\Models\Methods\MethodsServices;
-use App\Models\Planning\Task;
-use App\Models\Workflow\OrderLines;
 
 class TaskManage extends Component
 {
     public $idLine;
     public $idType;
     public $idPage;
+    public $statu;
     public $status_id;
     public $ServicesSelect;
     public $TaskType = "TechCut";
 
     public $taskId;
-    public $ordre;
+    public $ordre = 1;
     public $label;
     public $methods_services_id;
     public $component_id;
     public $type;
     public $qty;
-    public $seting_time;
-    public $unit_time;
-    public $unit_cost;
-    public $unit_price;
-    public $methods_units_id;
+    public $seting_time = 0;
+    public $unit_time = 0;
+    public $unit_cost = 0;
+    public $unit_price = 0;
+    public $methods_units_id = 0;
 
     Private $quote_lines_id;
     Private $order_lines_id;
@@ -43,10 +46,10 @@ class TaskManage extends Component
     // Validation Rules
     protected $rules = [
         'label'=>'required',
-        'ordre'=>'required',
+        'ordre' =>'required|numeric|gt:0',
         'methods_services_id' =>'required',
-        'unit_cost'=>'required',
-        'unit_price'=>'required',
+        'unit_cost'=>'required|numeric|gt:0',
+        'unit_price'=>'required|numeric|gt:0',
     ];
 
     public function ChangeTaskType() 
@@ -66,6 +69,18 @@ class TaskManage extends Component
         else{
             $this->ServicesSelect = [];
             session()->flash('error', 'Please select on type of document.');
+        }
+    }
+
+    public function ChangeCodelabel()
+    {
+        $Service = MethodsServices::select('id', 'ordre', 'label')->where('id', $this->methods_services_id)->get();
+        if(count($Service) > 0){
+            $this->label =  $Service[0]->label;
+            $this->ordre =  $Service[0]->ordre;
+        }else{
+            $this->label = '';
+            $this->ordre =10;
         }
     }
 
@@ -98,14 +113,22 @@ class TaskManage extends Component
     {
         if($this->idType == 'products_id'){
             $Line = Products::findOrFail($this->idLine);
+            $this->qty = 1 ;
         }
         elseif($this->idType == 'quote_lines_id'){
             $Line = Quotelines::findOrFail($this->idLine);
+            $this->qty = 1 ;
         }
         elseif($this->idType == 'order_lines_id'){
             $Line = OrderLines::findOrFail($this->idLine);
+            $this->qty = 1 ;
         }
-        
+        else{
+            $Line = new stdClass();
+            $Line->id = null;
+            $Line->qty = 0;
+        }
+
         return view('livewire.task-manage',[
             'Line' => $Line,
         ]);
@@ -119,13 +142,12 @@ class TaskManage extends Component
         $this->seting_time  = '';
         $this->unit_time  = '';
         $this->selling_price  = '';
-        $this->qty  = '';
         $this->unit_cost  = '';
         $this->unit_price  = '';    
         $this->methods_units_id  = '';
     }
 
-    public function storeTask($idLine){
+    public function storeTask($idLine  = null){
         $this->validate();
 
         if($this->idType == 'products_id'){
@@ -135,6 +157,11 @@ class TaskManage extends Component
             $this->quote_lines_id = $idLine;
         }
         elseif($this->idType == 'order_lines_id'){
+            $this->order_lines_id = $idLine;
+        }
+        else{
+            $this->products_id = $idLine;
+            $this->order_lines_id = $idLine;
             $this->order_lines_id = $idLine;
         }
 
@@ -152,7 +179,7 @@ class TaskManage extends Component
                             'seting_time' => $this->seting_time,   
                             'unit_time' => $this->unit_time,   
                             'remaining_time', 
-                            'advancement', 
+                            'progress', 
                             'status_id' => $this->status_id,   
                             'type' => $this->type,  
                             'delay',

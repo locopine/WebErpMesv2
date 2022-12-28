@@ -2,21 +2,28 @@
 
 namespace App\Models\Planning;
 
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Planning\Status;
 use App\Models\Products\Products;
+use App\Models\Products\StockMove;
+use Illuminate\Support\Facades\DB;
+use Spatie\Activitylog\LogOptions;
+use App\Models\Workflow\OrderLines;
 use App\Models\Workflow\QuoteLines;
 use App\Models\Methods\MethodsTools;
 use App\Models\Methods\MethodsUnits;
 use App\Models\Methods\MethodsServices;
+use App\Models\Planning\TaskActivities;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
 use App\Models\Quality\QualityNonConformity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Planning\Status;
-use App\Models\Workflow\OrderLines;
 
 class Task extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = ['label', 
                             'ordre',
@@ -28,7 +35,7 @@ class Task extends Model
                             'seting_time', 
                             'unit_time', 
                             'remaining_time', 
-                            'advancement', 
+                            'progress', 
                             'status_id', 
                             'type',
                             'delay',
@@ -53,6 +60,8 @@ class Task extends Model
                             'quality_non_conformities_id',
                             'methods_tools_id'];
 
+    protected $appends = ["open"];
+
     public function service()
     {
         return $this->belongsTo(MethodsServices::class, 'methods_services_id');
@@ -66,6 +75,11 @@ class Task extends Model
     public function OrderLines()
     {
         return $this->belongsTo(OrderLines::class, 'order_lines_id');
+    }
+
+    public function StockMove()
+    {
+        return $this->hasMany(StockMove::class);
     }
 
     public function Products()
@@ -108,13 +122,62 @@ class Task extends Model
         return $this->qty*$this->unit_time;
     }
 
+    public function Margin()
+    {
+        return (1-($this->unit_cost/$this->unit_price))*100;
+    }
+
     public function TotalTime()
     {
         return $this->qty*$this->unit_time+$this->seting_time;
     }
 
+    public function taskActivities()
+    {
+        return $this->hasMany(TaskActivities::class);
+    }
+
+    public function getTotalLogStartTime()
+    {
+        $current_date_time = Carbon::now()->toDateTimeString();
+        return   TaskActivities::where('task_id', $this->id)
+                                ->where('type', 1)
+                                ->sum(DB::raw("TIMESTAMPDIFF(SECOND, timestamp, '". $current_date_time ."')"));
+    }
+
+    public function getTotalLogEndTime()
+    {
+        $current_date_time = Carbon::now()->toDateTimeString();
+        return   TaskActivities::where('task_id', $this->id)
+                                ->where(function (Builder $query) {
+                                    return $query->where('type', 2)
+                                                ->orWhere('type', 3);
+                                })
+                                ->sum(DB::raw("TIMESTAMPDIFF(SECOND, timestamp, '". $current_date_time ."')"));
+    }
+
+    public function getTotalLogTime()
+    {
+        return   round(($this->getTotalLogStartTime()-$this->getTotalLogEndTime())/3600,2);
+    }
+
+    public function progress()
+    {
+        return   round($this->getTotalLogTime()/$this->TotalTime()*100,2);
+    }
+
     public function GetPrettyCreatedAttribute()
     {
         return date('d F Y', strtotime($this->created_at));
+    }
+
+    public function getOpenAttribute(){
+        return true;
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logOnly(['code', 'quote_lines_id', 'order_lines_id', 'products_id']);
+        // Chain fluent methods for configuration options
     }
 }

@@ -10,15 +10,16 @@ use Illuminate\Notifications\Notification;
 class UserRegisteredNotification extends Notification
 {
     use Queueable;
-
+    private $data;
+    
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -29,7 +30,7 @@ class UserRegisteredNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
@@ -55,7 +56,8 @@ class UserRegisteredNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'id' => $this->data['id'],
+            'code' => $this->data['name'],
         ];
     }
 }

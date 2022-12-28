@@ -2,26 +2,29 @@
 
 namespace App\Models;
 
+use App\Models\File;
 use App\Models\Planning\Task;
-use App\Models\Planning\Status;
+use App\Models\Workflow\Orders;
+use App\Models\Workflow\Quotes;
+use Spatie\Activitylog\LogOptions;
 use App\Models\Companies\Companies;
 use App\Models\Quality\QualityAction;
 use App\Models\Methods\MethodsSection;
 use App\Models\Products\StockLocation;
+use App\Models\Planning\TaskActivities;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Quality\QualityDerogation;
+use Spatie\Activitylog\Traits\LogsActivity;
 use App\Models\Quality\QualityControlDevice;
 use App\Models\Quality\QualityNonConformity;
 use App\Models\Products\StockLocationProducts;
-use App\Models\Workflow\Orders;
-use App\Models\Workflow\Quotes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory,LogsActivity, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -35,6 +38,10 @@ class User extends Authenticatable
         'personnal_phone_number',
         'desc',
         'born_date',
+        'companies_notification',
+        'users_notification',
+        'quotes_notification',
+        'orders_notification',
     ];
 
     /**
@@ -62,7 +69,7 @@ class User extends Authenticatable
             $this->image_url="img_avatar.png";
         }
 
-        return asset('/storage/images/profiles/' . $this->image_url);
+        return asset('/images/profiles/' . $this->image_url);
     }
   
     public function adminlte_profile_url()
@@ -139,5 +146,21 @@ class User extends Authenticatable
     public function tasks()
     {
         return $this->hasMany(Task::class)->orderBy('ordre')->whereNotNull('order_lines_id');
+    }
+
+    public function taskActivities()
+    {
+        return $this->hasMany(TaskActivities::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logOnly(['name', 'email']);
+        // Chain fluent methods for configuration options
     }
 }

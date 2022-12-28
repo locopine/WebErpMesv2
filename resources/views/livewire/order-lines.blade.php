@@ -18,14 +18,18 @@
                             <input type="hidden"  name="orders_id"  id="orders_id" value="1" wire:model="orders_id" >
                             @include('livewire.form.line-create')
                 @endif
+            @else
+            <x-adminlte-alert theme="info" title="Info">
+                The document status does not allow adding / modifying / deleting lines.
+            </x-adminlte-alert>
             @endif
         </div>
     </div>
     <div class="card">
         <div class="card-body">
             @include('include.search-card')
-            <div class="table-responsive">
-                <table class="table">
+            <div class="table-responsive p-0">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Sort</th>
@@ -90,10 +94,13 @@ Invoiced qty : {{ $OrderLine->invoiced_qty }}">{{ $OrderLine->qty }}</a>
                                     <div class="input-group-prepend">
                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                         <div class="dropdown-menu">
-                                            @if($OrderStatu == 1 && 1 == $OrderLine->delivery_status)
+                                            @if($OrderStatu == 1 && $OrderLine->delivery_status == 1 )
                                             <a href="#" class="dropdown-item " wire:click="duplicateLine({{$OrderLine->id}})" ><span class="text-info"><i class="fa fa-light fa-fw  fa-copy"></i> Copy line</span></a>
                                             <a href="#" class="dropdown-item" wire:click="edit({{$OrderLine->id}})"><span class="text-primary"><i class="fa fa-lg fa-fw  fa-edit"></i> Edit line</span></a>
                                             <a href="#" class="dropdown-item" wire:click="destroy({{$OrderLine->id}})" ><span class="text-danger"><i class="fa fa-lg fa-fw fa-trash"></i> Delete line</span></a>
+                                            @if($OrderLine->product_id )
+                                            <a href="#" class="dropdown-item" wire:click="breakDown({{$OrderLine->id}})"><span class="text-success"><i class="fa fa-lg fa-fw  fas fa-list"></i>Break down the article task</span></a>
+                                            @endif
                                             @else
                                             <p class="dropdown-item "><span class="text-info">Order curently in progress</span></p>
                                             @endif

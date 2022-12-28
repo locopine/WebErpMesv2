@@ -12,7 +12,7 @@ use App\Models\Workflow\Quotes;
 use App\Models\Products\Products;
 use App\Models\Companies\Companies;
 use App\Models\Workflow\OrderLines;
-use App\Models\Workflow\Quotelines;
+use App\Models\Workflow\QuoteLines;
 use App\Models\Methods\MethodsUnits;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Methods\MethodsServices;
@@ -33,9 +33,10 @@ class QuoteLine extends Component
     public $status_id;
 
     public $QuoteLineslist;
-    public $quote_lines_id, $quotes_id, $ordre, $product_id, $qty, $methods_units_id, $selling_price, $accounting_vats_id, $delivery_date, $statu;
+    public $quote_lines_id, $quotes_id, $ordre, $product_id, $methods_units_id, $selling_price, $accounting_vats_id, $delivery_date, $statu;
     public $code='';
     public $label='';
+    public $qty= 0;
     public $discount= 0;
     public $updateLines = false;
     public $ProductsSelect = [];
@@ -53,11 +54,11 @@ class QuoteLine extends Component
 
     // Validation Rules
     protected $rules = [
-        'ordre'=>'required',
+        'ordre' =>'required|numeric|min:0|not_in:0',
         'label'=>'required',
-        'qty'=>'required',
+        'qty'=>'required|min:1|not_in:0',
         'methods_units_id'=>'required',
-        'selling_price'=>'required',
+        'selling_price'=>'required|numeric|min:0|not_in:0',
         'discount'=>'required',
         'accounting_vats_id'=>'required',
     ];
@@ -100,8 +101,8 @@ class QuoteLine extends Component
         $this->delivery_date = $QuoteDelay;
         $this->status_id = Status::select('id')->orderBy('order')->first();
         $this->ProductsSelect = Products::select('id', 'label', 'code')->orderBy('code')->get();
-        $this->VATSelect = AccountingVat::select('id', 'label')->orderBy('rate')->get();
-        $this->UnitsSelect = MethodsUnits::select('id', 'label', 'code')->orderBy('label')->get();
+        $this->VATSelect = AccountingVat::select('id', 'label', 'default')->orderBy('rate')->get();
+        $this->UnitsSelect = MethodsUnits::select('id', 'label', 'code', 'default')->orderBy('label')->get();
         $this->Factory = Factory::first();
         $this->ProductSelect = Products::select('id', 'code','label', 'methods_services_id')->get();
         $this->TechServicesSelect = MethodsServices::select('id', 'code','label', 'type')->where('type', '=', 1)->orWhere('type', '=', 7)->orderBy('ordre')->get();
@@ -207,8 +208,20 @@ class QuoteLine extends Component
         }
     }
 
-    public function cancel()
-    {
+    
+    public function breakDown($id){
+        $Quoteline = Quotelines::findOrFail($id);
+        $TaskLine = Task::where('products_id', $Quoteline->product_id)->get();
+        foreach ($TaskLine as $Task) 
+        {
+            $newTask = $Task->replicate();
+            $newTask->quote_lines_id = $id;
+            $newTask->products_id = null;
+            $newTask->save();
+        }
+    }
+
+    public function cancel(){
         $this->updateLines = false;
         $this->resetFields();
     }
@@ -279,7 +292,7 @@ class QuoteLine extends Component
             ]);
 
             
-            Companies::where('id', $QuoteData->companies_id)->update(['statu_customer'=>2]);
+            Companies::where('id', $QuoteData->companies_id)->update(['statu_customer'=>3]);
 
             if($OrdersCreated){
                 // Create lines
@@ -311,6 +324,12 @@ class QuoteLine extends Component
                         $newTask->order_lines_id = $newOrderline->id;
                         $newTask->quote_lines_id = null;
                         $newTask->save();
+
+                        //update info that order line as task
+                        $OrderLine = OrderLines::find($newOrderline->id);
+                        $OrderLine->tasks_status = 2;
+                        $OrderLine->save();
+                        
                     }
 
                     //update quote lines statu

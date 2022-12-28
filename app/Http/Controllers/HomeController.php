@@ -29,11 +29,15 @@ class HomeController extends Controller
         }
 
         //use for liste of tasks
-        $ServiceGoals = MethodsServices::withCount('Tasks')->orderBy('ordre')->get();
+        $ServiceGoals = MethodsServices::withCount(['Tasks', 'Tasks' => function ($query) {
+                                            $query->whereNotNull('order_lines_id');
+                                        }])
+                                        ->orderBy('ordre')->get();
         $Tasks = DB::table('tasks')
                     ->select('tasks.id','statuses.title', 'methods_services.id as methods_id', 'methods_services.label', DB::raw('count(*) as total_task'))
                     ->join('statuses', 'tasks.status_id', '=', 'statuses.id')
                     ->join('methods_services', 'tasks.methods_services_id', '=', 'methods_services.id')
+                    ->whereNotNull('tasks.order_lines_id')
                     ->groupBy('methods_services_id')
                     ->groupBy('status_id')
                     ->orderBy('statuses.order', 'asc')
@@ -131,8 +135,24 @@ class HomeController extends Controller
                                     ->whereYear('created_at', $CurentYear)
                                     ->get();
 
+        
+
         //Estimated Budgets data for chart
         $data['estimatedBudget'] = EstimatedBudgets::where('year', $CurentYear)->get();
+
+        //GOAL 
+        $EstimatedBudgets = $data['estimatedBudget'][0]->amount1
+                            +$data['estimatedBudget'][0]->amount2
+                            +$data['estimatedBudget'][0]->amount3
+                            +$data['estimatedBudget'][0]->amount4
+                            +$data['estimatedBudget'][0]->amount5
+                            +$data['estimatedBudget'][0]->amount6
+                            +$data['estimatedBudget'][0]->amount7
+                            +$data['estimatedBudget'][0]->amount8
+                            +$data['estimatedBudget'][0]->amount9
+                            +$data['estimatedBudget'][0]->amount10
+                            +$data['estimatedBudget'][0]->amount11
+                            +$data['estimatedBudget'][0]->amount12;
 
         return view('dashboard', [
             'Factory' => $Factory,
@@ -147,6 +167,7 @@ class HomeController extends Controller
             'LateOrders' =>  $LateOrders,
             'ServiceGoals' => $ServiceGoals,
             'Tasks' => $Tasks,
+            'EstimatedBudgets' => $EstimatedBudgets,
         ])->with('data',$data);
     }
 

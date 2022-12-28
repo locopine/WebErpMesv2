@@ -7,15 +7,16 @@ use Illuminate\Http\Request;
 use App\Models\Products\Stocks;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Products\StoreStockRequest;
 use App\Models\Products\StockLocation;
+use App\Http\Requests\Products\StoreStockRequest;
+use App\Http\Requests\Products\UpdateStockRequest;
 
 class StockController extends Controller
 {
     //
     public function index()
     {
-        $stocks = Stocks::All();
+        $stocks = Stocks::withCount('StockLocation')->get();
         $userSelect = User::select('id', 'name')->get();
         $LastStock =  DB::table('stocks')->orderBy('id', 'desc')->first();
         return view('products/stocks-index', [
@@ -34,7 +35,7 @@ class StockController extends Controller
     public function show($id)
     {
         $Stock = Stocks::findOrFail($id);
-        $StockLocations = StockLocation::where('stocks_id', '=', $id)->get();
+        $StockLocations = StockLocation::withCount('StockLocationProducts')->where('stocks_id', '=', $id)->get();
         $userSelect = User::select('id', 'name')->get();
         $LastStockLocation =  DB::table('stock_locations')->orderBy('id', 'desc')->first();
         
@@ -44,5 +45,18 @@ class StockController extends Controller
             'userSelect' => $userSelect,
             'LastStockLocation' => $LastStockLocation
         ]);
+    }
+
+    /**
+     * @param $request
+     * @return View
+     */
+    public function update(UpdateStockRequest $request)
+    {
+        $Stock = Stocks::find($request->id);
+        $Stock->label=$request->label;
+        $Stock->user_id=$request->user_id;
+        $Stock->save();
+        return redirect()->route('products.stock')->with('success', 'Successfully updated stock '.  $Stock->label);
     }
 }

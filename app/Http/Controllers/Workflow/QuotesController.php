@@ -7,16 +7,15 @@ use App\Models\User;
 use App\Models\Admin\Factory;
 use App\Models\Planning\Status;
 use App\Models\Workflow\Quotes;
-use App\ServiceS\QuoteCalculator;
+use App\Services\QuoteCalculator;
 use Illuminate\Support\Facades\DB;
 use App\Models\Companies\Companies;
 use App\Models\Workflow\QuoteLines;
+
 use App\Http\Controllers\Controller;
 use App\Models\Companies\CompaniesContacts;
-
 use App\Models\Companies\CompaniesAddresses;
 use App\Models\Accounting\AccountingDelivery;
-use App\Http\Requests\Workflow\StoreQuoteRequest;
 use App\Http\Requests\Workflow\UpdateQuoteRequest;
 use App\Models\Accounting\AccountingPaymentMethod;
 use App\Models\Accounting\AccountingPaymentConditions;
@@ -53,7 +52,7 @@ class QuotesController extends Controller
      */
     public function show(Quotes $id)
     {
-        $CompanieSelect = Companies::select('id', 'code','label')->get();
+        $CompanieSelect = Companies::select('id', 'code','label')->where('active', 1)->get();
         $AddressSelect = CompaniesAddresses::select('id', 'label','adress')->get();
         $ContactSelect = CompaniesContacts::select('id', 'first_name','name')->get();
         $AccountingConditionSelect = AccountingPaymentConditions::select('id', 'code','label')->get();
@@ -74,7 +73,7 @@ class QuotesController extends Controller
         
         $Status = Status::select('id')->orderBy('order')->first();
         if(!$Status){
-            return redirect()->route('admin.factory')->with('error', 'Please check kanban statu');
+            return redirect()->route('admin.factory')->withErrors('Please add Kanban information before');
         }
 
         return view('workflow/quotes-show', [

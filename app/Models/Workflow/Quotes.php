@@ -2,22 +2,25 @@
 
 namespace App\Models\Workflow;
 
+use App\Models\File;
 use App\Models\User;
 use App\Services\QuoteCalculator;
+use Spatie\Activitylog\LogOptions;
 use App\Models\Companies\Companies;
 use App\Models\Workflow\QuoteLines;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Companies\CompaniesContacts;
+
+use Spatie\Activitylog\Traits\LogsActivity;
 use App\Models\Companies\CompaniesAddresses;
 use App\Models\Accounting\AccountingDelivery;
-
 use App\Models\Accounting\AccountingPaymentMethod;
 use App\Models\Accounting\AccountingPaymentConditions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Quotes extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = ['code', 
                             'label', 
@@ -73,6 +76,11 @@ class Quotes extends Model
         return $this->hasMany(QuoteLines::class)->orderBy('ordre');
     }
 
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+    
     public function GetPrettyCreatedAttribute()
     {
         return date('d F Y', strtotime($this->created_at));
@@ -82,5 +90,11 @@ class Quotes extends Model
     {
         $quoteCalculator = new QuoteCalculator($this);
         return $quoteCalculator->getTotalPrice();
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logOnly(['code', 'label', 'statu']);
+        // Chain fluent methods for configuration options
     }
 }

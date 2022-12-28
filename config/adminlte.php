@@ -31,7 +31,7 @@ return [
     */
 
     'use_ico_only' => false,
-    'use_full_favicon' => false,
+    'use_full_favicon' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -45,9 +45,9 @@ return [
     |
     */
 
-    'logo' => '<b>WEM</b>',
+    'logo' => 'v1.0.3',
     'logo_img' => 'vendor/adminlte/dist/img/WEMLogo.png',
-    'logo_img_class' => 'brand-image img-circle elevation-3',
+    'logo_img_class' => 'brand-image  elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
     'logo_img_alt' => 'WEM',
@@ -228,7 +228,7 @@ return [
         // Navbar items:
         [
             'type'          => 'navbar-search',
-            'text'          => 'search',        
+            'text'          => 'search_trans_key',        
             'topnav'        => true,
             'url'           => 'navbar/search',
             'method'        => 'post', 
@@ -238,7 +238,40 @@ return [
             'type'         => 'fullscreen-widget',
             'topnav_right' => true,
         ],
-
+        [
+            'type'         => 'darkmode-widget',
+            'topnav_right' => true, // Or "topnav => true" to place on the left.
+        ],
+        [
+            'type'         => 'navbar-notification',
+            'id'           => 'my-notification',
+            'icon'         => 'fas fa-bell',
+            'route'        => 'notifications.show',
+            'topnav_right' => true,
+            'dropdown_mode'   => true,
+            'dropdown_flabel' => 'All notifications',
+            'update_cfg'   => [
+                'route'  => ['notifications.get', ['param' => 'val']],
+                'period' => 30,
+            ],
+        ],
+        [
+            'text' => 'language_trans_key',
+            'topnav_right' => true,
+            'icon' => 'flag-icon flag-icon-uk',
+            'submenu' => [
+                [
+                    'text'=>'english_trans_key',
+                    'icon' => 'flag-icon flag-icon-uk',
+                    'url'=> 'en',
+                ],
+                [
+                    'text'=>'french_trans_key',
+                    'icon' => 'flag-icon flag-icon-fr',
+                    'url'=> 'fr',
+                ]
+            ]
+        ],
         // Sidebar items:
         /*[
             'type'      => 'sidebar-menu-search',
@@ -248,161 +281,169 @@ return [
             'input_name'=> 'searchVal' ,
         ],*/
         [
-            'text'        => 'Dashboard',
+            'text'        => 'dashboard_trans_key',
             'url'         => 'dashboard',
             'icon'        => 'fas fa-tachometer-alt',
         ],
         [
-            'text'    => 'Companies',
+            'text'    => 'companies_trans_key',
             'icon'    => 'far fa-building',
             'url'     => 'companies',
         ],
         [
-            'text'    => 'Quote',
+            'text'    => 'quote_trans_key',
             'icon'    => 'fas fa-calculator',
             'submenu' => [
                 [
-                    'text' => 'Quotes list',
+                    'text' => 'quotes_list_trans_key',
                     'url'  => 'quotes',
                 ],
                 [
-                    'text' => 'Quotes lines list',
+                    'text' => 'quotes_lines_list_trans_key',
                     'url'  => 'quotes/lines',
                 ],
             ]
         ],
         [
-            'text'    => 'Orders',
+            'text'    => 'orders_trans_key',
             'icon'    => 'fas fa-shopping-cart',
             'url'  => 'orders',
             'submenu' => [
                 [
-                    'text' => 'Orders list',
+                    'text' => 'orders_list_trans_key',
                     'url'  => 'orders',
                 ],
                 [
-                    'text' => 'Orders lines list',
+                    'text' => 'orders_lines_list_trans_key',
                     'url'  => 'orders/lines',
                 ],
             ]
         ],
         [
-            'text'    => 'Tasks',
-            'icon' => 'fas fa-tasks',
+            'text'    => 'scheduling_trans_key',
+            'icon' => 'fas fa-calendar-alt',
             'submenu' => [
                 [
-                    'text' => 'Tasks list',
-                    'url'  => 'production/Task',
+                    'text' => 'order_calendar_trans_key',
+                    'url'  => 'production/calendar',
+                ],[
+                    'text'    => 'tasks_trans_key',
+                    'icon_color' => 'primary',
+                    'submenu' => [
+                        [
+                            'text' => 'tasks_statu_trans_key',
+                            'url'  => 'production/Task/Statu',
+                            'icon_color' => 'primary',
+                        ],
+                        [
+                            'text' => 'tasks_list_trans_key',
+                            'url'  => 'production/Task',
+                            'icon_color' => 'primary',
+                        ],
+                    ]
+                    
                 ],
                 [
-                    'text' => 'Kanban',
+                    'text' => 'workflow_trans_key',
                     'url'  => 'production/kanban',
                 ],
-                /* 
-                https://github.com/billyboy35/WebErpMesv2/issues/27
                 [
-                    'text' => 'Gantt',
-                    'url'  => 'production/Gantt',
+                    'text' => 'gantt_trans_key',
+                    'url'  => 'production/gantt',
+                    'label'       => 'Beta',
+                    'label_color' => 'danger',
                 ],
-                */
+                
             ]
         ],
-        /* 
-        https://github.com/billyboy35/WebErpMesv2/issues/30
         [
-            'text' => 'Calendar',
-            'url'  => '#',
-            'icon' => 'fas fa-calendar-alt',
-        ],*/
-        [
-            'text'    => 'Delivery notes',
+            'text'    => 'delivery_notes_trans_key',
             'icon'    => 'fas fa-receipt',
             'submenu' => [
                 [
-                    'text' => 'Deliverys notes request',
+                    'text' => 'deliverys_notes_request_trans_key',
                     'url'  => 'deliverys/request',
                 ],
                 [
-                    'text' => 'Deliverys notes list',
+                    'text' => 'deliverys_notes_list_trans_key',
                     'url'  => 'deliverys',
                 ],
             ]
         ],
         [
-            'text'    => 'Invoices ',
+            'text'    => 'invoices_trans_key',
             'icon'    => 'fas fa-calculator',
             'submenu' => [
                 [
-                    'text' => 'Invoices  request',
+                    'text' => 'invoices_request_trans_key',
                     'url'  => 'invoices/request',
                 ],
                 [
-                    'text' => 'Invoices  list',
+                    'text' => 'invoices_list_trans_key',
                     'url'  => 'invoices',
                 ],
             ]
         ],
-        ['header' => 'Others'],
+        ['header' => 'others_trans_key'],
         [
-            'text'    => 'Product',
+            'text'    => 'product_trans_key',
             'icon'    => 'fas fa-barcode',
             'submenu' => [
                 [
-                    'text' => 'Product list',
+                    'text' => 'product_list_trans_key',
                     'url'  => 'products',
                 ],
-                /*
                 [
-                    'text' => 'Stock',
+                    'text' => 'stock_trans_key',
                     'url'  => 'products/Stock',
                 ],
-                [
-                    'text' => 'Inventory',
+                /*[
+                    'text' => 'inventory_trans_key',
                     'url'  => '#',
                 ],*/
             ],
         ],
         [
-            'text'    => 'Purchase',
+            'text'    => 'purchase_trans_key',
             'icon'    => 'fas fa-cash-register',
             'submenu' => [
                 [
-                    'text' => 'Purchase request',
+                    'text' => 'purchase_request_trans_key',
                     'url'  => 'purchases/request',
                 ],
                 [
-                    'text' => 'Requests for quotation list',
+                    'text' => 'requests_for_quotation_list_trans_key',
                     'url'  => 'purchases/quotation',
                 ],
                 [
-                    'text' => 'Purchase list',
+                    'text' => 'purchase_list_trans_key',
                     'url'  => 'purchases',
                 ],
                 [
-                    'text' => 'Waiting to receipt',
+                    'text' => 'waiting_to_receipt_trans_key',
                     'url'  => 'purchases/waiting/receipt',
                 ],
                 [
-                    'text' => 'PO receipt',
+                    'text' => 'po_receipt_trans_key',
                     'url'  => 'purchases/receipt',
                 ],
                 [
-                    'text' => 'Waiting to invoice',
+                    'text' => 'waiting_to_invoice_trans_key',
                     'url'  => 'purchases/waiting/invoice',
                 ],
                 [
-                    'text' => 'Invoice supplier',
+                    'text' => 'invoice_supplier_trans_key',
                     'url'  => 'purchases/invoice',
                 ],
             ],
         ],
         [
             
-            'text' => 'Quality',
+            'text' => 'quality_trans_key',
             'icon'    => 'fas fa-ruler-combined',
             'url'  => 'quality',
         ],
-        ['header' => 'Settings'],
+        ['header' => 'settings_trans_key'],
         /* 
         [
             'text' => 'Setting times',
@@ -411,24 +452,30 @@ return [
         ],
         */
         [
-            'text' => 'Methods',
+            'text' => 'methods_trans_key',
             'icon'   => 'fas fa-cogs',
             'url'  => 'methods',
         ],
         [
-            'text' => 'Accouting',
+            'text' => 'accouting_trans_key',
             'icon'    => 'fas fa-piggy-bank',
             'url'  => 'accouting',
         ],
         [
-            'text'        => 'Users',
+            'text'        => 'users_trans_key',
             'url'         => 'users',
             'icon'        => 'fas fa-users',
         ],
         [
-            'text' => 'Your company',
+            'text' => 'your_company_trans_key',
             'url'  => 'admin/factory',
             'icon'    => 'fas fa-industry',
+        ],
+        ['header' => 'W.E.M.'],
+        [
+            'text' => 'licence_trans_key',
+            'url'  => 'licence',
+            'icon'    => 'nav-icon fas fa-file-contract',
         ],
     ],
 
@@ -472,28 +519,63 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js',
+                    'asset' => false,
+                    'location' => 'vendor/datatables/js/jquery.dataTables.min.js',
                 ],
                 [
                     'type' => 'js',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
+                    'asset' => false,
+                    'location' => 'vendor/datatables/js/dataTables.bootstrap4.min.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css',
+                    'asset' => false,
+                    'location' => 'vendor/datatables/css/dataTables.bootstrap4.min.css',
+                ],
+            ],
+        ],
+        'DatatablesPlugins' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'vendor/datatables-plugins/buttons/js/dataTables.buttons.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.bootstrap4.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.html5.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'vendor/datatables-plugins/buttons/js/buttons.print.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'vendor/datatables-plugins/jszip/jszip.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'vendor/datatables-plugins/pdfmake/pdfmake.min.js',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => 'vendor/datatables-plugins/pdfmake/vfs_fonts.js',
                 ],
                 [
                     'type' => 'css',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/responsive/2.2.6/css/responsive.bootstrap4.min.css',
-                ],
-                [
-                    'type' => 'css',
-                    'asset' => true,
-                    'location' => '//cdn.datatables.net/buttons/1.6.4/css/buttons.bootstrap4.min.css',
+                    'asset' => false,
+                    'location' => 'vendor/datatables-plugins/buttons/css/buttons.bootstrap4.min.css',
                 ],
             ],
         ],
@@ -547,6 +629,58 @@ return [
                 ],
             ],
         ],
+        'BootstrapSwitch' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => 'vendor/bootstrap-switch/js/bootstrap-switch.min.js',
+                ],
+            ],
+        ],
+        'FlagIconCss' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => false,
+                    'location' => '//cdn.jsdelivr.net/gh/lipis/flag-icons@6.6.6/css/flag-icons.min.css',
+                    ],
+            ],
+        ],
+        'Dropzone' => [
+            'active' => false,
+            'files' => [
+                [
+                'type' => 'css',
+                'asset' => false,
+                'location' => '//unpkg.com/dropzone@5/dist/min/dropzone.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => false,
+                    'location' => '//unpkg.com/dropzone@5/dist/min/dropzone.min.js',
+                ],
+            ],
+        ],
+        'dhtmlxGantt ' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '//cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '//cdn.dhtmlx.com/gantt/edge/dhtmlxgantt.js',
+                ],
+            ],
+        ],
+
+
     ],
 
     /*

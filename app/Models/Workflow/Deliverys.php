@@ -2,21 +2,21 @@
 
 namespace App\Models\Workflow;
 
+use App\Models\File;
 use App\Models\User;
 use App\Models\Workflow\Orders;
+use Spatie\Activitylog\LogOptions;
 use App\Models\Companies\Companies;
-use App\Models\Workflow\OrderLines;
 use App\Models\Workflow\DeliveryLines;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Companies\CompaniesContacts;
+use Spatie\Activitylog\Traits\LogsActivity;
 use App\Models\Companies\CompaniesAddresses;
-use App\Models\Accounting\AccountingPaymentMethod;
-use App\Models\Accounting\AccountingPaymentConditions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Deliverys extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     protected $fillable = ['code', 
                             'label', 
@@ -59,8 +59,19 @@ class Deliverys extends Model
         return $this->hasMany(DeliveryLines::class)->orderBy('ordre');
     }
 
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+
     public function GetPrettyCreatedAttribute()
     {
         return date('d F Y', strtotime($this->created_at));
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logOnly([ 'code', 'label', 'statu']);
+        // Chain fluent methods for configuration options
     }
 }

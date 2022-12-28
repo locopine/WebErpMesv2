@@ -55,6 +55,7 @@
                       </div>
                     </div>
                   </div>
+                  @if($Order->type == 1)
                   <div class="card card-body">
                     <div class="row">
                       <label for="InputWebSite">Customer information</label>
@@ -94,11 +95,21 @@
                           @include('include.form.form-select-delivery',['accountingDeliveriesId' =>   $Order->accounting_deliveries_id])
                       </div>
                       <div class="col-5">
-                        <label for="label">Validity date</label>
+                        <label for="label">Delevery date</label>
                         <input type="date" class="form-control" name="validity_date"  id="validity_date" value="{{  $Order->validity_date }}">
                       </div>
                     </div>
                   </div>
+                  @else
+                  <div class="card card-body">
+                    <div class="row">
+                      <div class="col-5">
+                        <label for="label">Delevery date</label>
+                        <input type="date" class="form-control" name="validity_date"  id="validity_date" value="{{  $Order->validity_date }}">
+                      </div>
+                    </div>
+                  </div>
+                  @endif
                   <div class="card card-body">
                     <div class="row">
                       <x-FormTextareaComment  comment="{{ $Order->comment }}" />
@@ -133,8 +144,9 @@
               <div class="card-header">
                 <h3 class="card-title"> Options </h3>
               </div>
-              <div class="table-responsive">
-                <table class="table">
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover">
+                    @if($Order->type == 1)
                     <tr>
                         <td style="width:50%"> 
                           <x-ButtonTextPrint route="{{ route('print.order', ['Document' => $Order->id])}}" />
@@ -151,6 +163,7 @@
                         <x-ButtonTextPDF route="{{ route('pdf.orders.confirm', ['Document' => $Order->id])}}" />
                       </td>
                     </tr>
+                    @endif
                     <tr>
                       <td style="width:50%">
                         <a href="{{ route('print.manufacturing.instruction', ['Document' => $Order->id])}}" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i>Print Manufacturing instruction</a>
@@ -160,6 +173,42 @@
                       </td>
                   </tr>
                 </table>
+              </div>
+            </div>
+            
+            <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title"> Documents </h3>
+              </div>
+                <div class="card-body">
+                      <form action="{{ route('file.store') }}" method="post" enctype="multipart/form-data">
+                          @csrf
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><i class="far fa-file"></i></span>
+                            </div>
+                            <div class="custom-file">
+                              <input type="hidden" name="order_id" value="{{ $Order->id }}" >
+                              <input type="file" name="file" class="custom-file-input" id="chooseFile">
+                              <label class="custom-file-label" for="chooseFile">Choose file</label>
+                            </div>
+                            <div class="input-group-append">
+                              <button type="submit" name="submit" class="btn btn-success">
+                                Upload
+                              </button>
+                            </div>
+                          </div>
+                      </form>
+                    <h5 class="mt-5 text-muted">Attached files</h5>
+                    <ul class="list-unstyled">
+                      @forelse ( $Order->files as $file)
+                      <li>
+                        <a href="{{ asset('/file/'. $file->name) }}" download="{{ $file->original_file_name }}" class="btn-link text-secondary">{{ $file->original_file_name }} -  <small>{{ $file->GetPrettySize() }}</small></a>
+                      </li>
+                      @empty
+                        No file
+                      @endforelse
+                    </ul>
               </div>
             </div>
           </div>

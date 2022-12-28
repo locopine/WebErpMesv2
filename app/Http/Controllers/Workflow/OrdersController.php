@@ -6,9 +6,10 @@ use Carbon\Carbon;
 use App\Models\Admin\Factory;
 use App\Models\Planning\Status;
 use App\Models\Workflow\Orders;
-use App\ServiceS\OrderCalculator;
+use App\Services\OrderCalculator;
 use Illuminate\Support\Facades\DB;
 use App\Models\Companies\Companies;
+use App\Models\Workflow\OrderLines;
 use App\Http\Controllers\Controller;
 use App\Models\Companies\CompaniesContacts;
 use App\Models\Companies\CompaniesAddresses;
@@ -48,7 +49,7 @@ class OrdersController extends Controller
      */
     public function show(Orders $id)
     {
-        $CompanieSelect = Companies::select('id', 'code','label')->get();
+        $CompanieSelect = Companies::select('id', 'code','label')->where('active', 1)->get();
         $AddressSelect = CompaniesAddresses::select('id', 'label','adress')->get();
         $ContactSelect = CompaniesContacts::select('id', 'first_name','name')->get();
         $AccountingConditionSelect = AccountingPaymentConditions::select('id', 'code','label')->get();
@@ -68,7 +69,7 @@ class OrdersController extends Controller
         }
         $Status = Status::select('id')->orderBy('order')->first();
         if(!$Status){
-            return redirect()->route('admin.factory')->with('error', 'Please check kanban statu');
+            return redirect()->route('admin.factory')->withErrors('Please add Kanban information before');
         }
 
         return view('workflow/orders-show', [
@@ -87,6 +88,7 @@ class OrdersController extends Controller
             'nextUrl' =>  $nextUrl,
         ]);
     }
+
     
     /**
      * @param Request $request
